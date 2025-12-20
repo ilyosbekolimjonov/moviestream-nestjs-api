@@ -156,7 +156,6 @@ export class MoviesService {
       throw new UnauthorizedException('User not authenticated');
     }
 
-    // Ensure provided category IDs exist
     const existingCategories = await this.prisma.category.findMany({
       where: { id: { in: dto.categoryIds } },
       select: { id: true },
