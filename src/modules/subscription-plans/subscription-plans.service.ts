@@ -1,26 +1,58 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSubscriptionPlanDto } from './dto/create-subscription-plan.dto';
-import { UpdateSubscriptionPlanDto } from './dto/update-subscription-plan.dto';
+import { PrismaService } from '../../prisma/prisma.service';
+import { CreatePlanDto } from './dto/create-subscription-plan.dto';
 
 @Injectable()
 export class SubscriptionPlansService {
-  create(createSubscriptionPlanDto: CreateSubscriptionPlanDto) {
-    return 'This action adds a new subscriptionPlan';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async getActivePlans() {
+    const plans = await this.prisma.subscriptionPlan.findMany({
+      where: { isActive: true },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        durationDays: true,
+        features: true,
+      },
+      orderBy: { price: 'asc' },
+    });
+
+    return {
+      success: true,
+      data: plans.map((plan) => ({
+        id: plan.id,
+        name: plan.name,
+        price: Number(plan.price),
+        duration_days: plan.durationDays,
+        features: plan.features,
+      })),
+    };
   }
 
-  findAll() {
-    return `This action returns all subscriptionPlans`;
-  }
+  async createPlan(dto: CreatePlanDto) {
+    const plan = await this.prisma.subscriptionPlan.create({
+      data: {
+        name: dto.name,
+        price: dto.price,
+        durationDays: dto.duration_days,
+        features: dto.features,
+        isActive: dto.is_active ?? true,
+      },
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} subscriptionPlan`;
-  }
-
-  update(id: number, updateSubscriptionPlanDto: UpdateSubscriptionPlanDto) {
-    return `This action updates a #${id} subscriptionPlan`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} subscriptionPlan`;
+    return {
+      success: true,
+      message: 'Obuna rejasi muvaffaqiyatli yaratildi',
+      data: {
+        id: plan.id,
+        name: plan.name,
+        price: Number(plan.price),
+        duration_days: plan.durationDays,
+        features: plan.features,
+        is_active: plan.isActive,
+      },
+    };
   }
 }
