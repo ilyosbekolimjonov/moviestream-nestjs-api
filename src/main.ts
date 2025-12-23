@@ -36,7 +36,6 @@ async function bootstrap() {
         .setDescription('A secure, scalable backend API for a movie streaming platform with user management, subscription plans, and comprehensive movie catalog features.')
         .setVersion('1.0')
         .addTag('Auth', 'Authentication endpoints')
-        .addTag('Users', 'User management endpoints')
         .addTag('Profiles', 'User profile endpoints')
         .addTag('Subscription Plans', 'Subscription plan management')
         .addTag('User Subscriptions', 'User subscription endpoints')
@@ -45,7 +44,6 @@ async function bootstrap() {
         .addTag('Movies', 'Movie management endpoints')
         .addTag('Favorites', 'User favorites endpoints')
         .addTag('Reviews', 'Movie review endpoints')
-        .addTag('Watch History', 'Watch history tracking endpoints')
         .addBearerAuth({
                 type: 'http',
                 scheme: 'bearer',

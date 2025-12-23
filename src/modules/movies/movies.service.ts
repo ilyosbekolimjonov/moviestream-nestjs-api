@@ -1,13 +1,7 @@
-// src/modules/movies/movies.service.ts
-
 import { Injectable, NotFoundException, BadRequestException, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service'; // yo'lni o'zingizga moslang
+import { PrismaService } from '../../prisma/prisma.service';
 import { GetMoviesQueryDto } from './dto/get-movies-query.dto';
-import {
-  PaginatedMoviesResponseDto,
-  MovieDetailDto,
-  MovieListItemDto,
-} from './dto/movie-response.dto';
+import { PaginatedMoviesResponseDto, MovieDetailDto, MovieListItemDto } from './dto/movie-response.dto';
 import { RequestWithUser } from 'src/common/interfaces/request-with-user.interface';
 import { Prisma } from '@prisma/client';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -63,12 +57,11 @@ export class MoviesService {
           },
         },
       },
-      orderBy: { createdAt: 'desc' }, // created_at → createdAt
+      orderBy: { createdAt: 'desc' },
     });
 
     const userId = req.user?.id;
 
-    // Prisma Decimal → number ga aylantirish
     const movieList: MovieListItemDto[] = movies.map((movie) => ({
       id: movie.id,
       title: movie.title,
@@ -117,10 +110,9 @@ export class MoviesService {
       throw new NotFoundException('Movie not found');
     }
 
-    // View count increment (fire-and-forget)
     this.prisma.movie.update({
       where: { id: movie.id },
-      data: { viewCount: { increment: 1 } }, // view_count → viewCount
+      data: { viewCount: { increment: 1 } },
     });
 
     const avgRating = movie.reviews.length
@@ -189,7 +181,7 @@ export class MoviesService {
         createdBy: userId,
         categories: {
           create: dto.categoryIds.map((categoryId) => ({
-            category: { connect: { id: categoryId } }, // id string UUID
+            category: { connect: { id: categoryId } },
           })),
         },
         files: {
@@ -200,7 +192,7 @@ export class MoviesService {
           })),
         },
       },
-      include: { // Bu juda muhim!
+      include: { 
         categories: {
           select: { category: { select: { name: true } } },
         },

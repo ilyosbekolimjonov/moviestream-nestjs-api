@@ -11,7 +11,7 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Public()
   @Post('register')
@@ -75,9 +75,6 @@ export class AuthController {
     },
   })
   logout(@Res() res: Response) {
-    // Hozircha cookie yo'q, keyinroq quyidagi qatorni ochamiz:
-    // res.clearCookie('auth_token', { httpOnly: true, secure: true, sameSite: 'strict' });
-
     return {
       success: true,
       message: 'Muvaffaqiyatli tizimdan chiqildi',

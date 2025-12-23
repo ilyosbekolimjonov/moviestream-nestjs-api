@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule } from './modules/users/users.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
 import { SubscriptionModule } from './modules/subscription-plans/subscription-plans.module';
 import { UserSubscriptionsModule } from './modules/user-subscriptions/user-subscriptions.module';
@@ -23,7 +22,6 @@ import { RolesGuard } from './common/guards/roles.guard';
     }),
     PrismaModule,
     AuthModule,
-    UsersModule,
     ProfilesModule,
     SubscriptionModule,
     UserSubscriptionsModule,

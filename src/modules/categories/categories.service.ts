@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -13,7 +13,6 @@ export class CategoriesService {
       ? slugify(dto.slug, { lower: true, strict: true })
       : slugify(dto.name, { lower: true, strict: true });
 
-    // Ensure slug uniqueness
     let counter = 1;
     while (await this.prisma.category.findUnique({ where: { slug } })) {
       slug = `${slug}-${counter}`;
@@ -45,13 +44,35 @@ export class CategoriesService {
   }
 
   async update(id: string, dto: UpdateCategoryDto) {
-    await this.findOne(id); // will throw if not found
-
+    await this.findOne(id);
     const data: any = { ...dto };
-    if (dto.slug) data.slug = slugify(dto.slug, { lower: true, strict: true });
 
-    const updated = await this.prisma.category.update({ where: { id }, data });
-    return updated;
+    if (dto.slug) {
+      const slugValue = slugify(dto.slug, { lower: true, strict: true });
+      const existingCategory = await this.prisma.category.findUnique({
+        where: { slug: slugValue }
+      });
+      if (existingCategory && existingCategory.id !== id) {
+        throw new ConflictException(
+          `Category with slug "${slugValue}" already exists`
+        );
+      }
+
+      data.slug = slugValue;
+    }
+
+    try {
+      const updated = await this.prisma.category.update({
+        where: { id },
+        data
+      });
+      return updated;
+    } catch (error) {
+      if (error.code === 'P2002') {
+        throw new ConflictException('Category with this slug already exists');
+      }
+      throw error;
+    }
   }
 
   async remove(id: string) {

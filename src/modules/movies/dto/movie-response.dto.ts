@@ -3,7 +3,7 @@ import { SubscriptionType, VideoQuality } from '@prisma/client';
 export class MovieFileDto {
     quality: VideoQuality;
     language: string;
-    size_mb?: number; // frontend uchun qoʻshimcha, DBda yoʻq boʻlsa ham qoʻshish mumkin
+    size_mb?: number;
 }
 
 export class MovieListItemDto {

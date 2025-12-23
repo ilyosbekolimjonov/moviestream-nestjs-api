@@ -1,31 +1,7 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Query,
-  Req,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { GetMoviesQueryDto } from './dto/get-movies-query.dto';
-import {
-  PaginatedMoviesResponseDto,
-  MovieDetailDto,
-} from './dto/movie-response.dto';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiQuery,
-  ApiParam,
-  ApiResponse,
-  ApiBearerAuth,
-  ApiBody,
-  ApiCreatedResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiQuery, ApiParam, ApiResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
 import type { RequestWithUser } from 'src/common/interfaces/request-with-user.interface';
 import { Public } from 'src/common/decorators/public.decorator';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -37,7 +13,7 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 @ApiBearerAuth('JWT-auth')
 @Controller('movies')
 export class MoviesController {
-  constructor(private readonly moviesService: MoviesService) { }
+  constructor(private readonly moviesService: MoviesService) {}
 
   @Public()
   @Get()
