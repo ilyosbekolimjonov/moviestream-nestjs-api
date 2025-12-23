@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, UseGuards } from '@nestjs/common';
 import { SubscriptionPlansService } from './subscription-plans.service';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
 import { CreatePlanDto } from './dto/create-subscription-plan.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
@@ -67,8 +67,24 @@ export class SubscriptionPlansController {
       },
     },
   })
-
   async createPlan(@Body() dto: CreatePlanDto) {
     return this.plansService.createPlan(dto);
   }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
+  @ApiBearerAuth('JWT-auth')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Delete subscription plan' })
+  @ApiParam({ name: 'id', description: 'Plan ID' })
+  @ApiResponse({ status: 200, description: 'Plan deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Plan not found' })
+  @ApiResponse({ status: 400, description: 'Cannot delete plan with active subscriptions' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  deletePlan(@Param('id') id: string) {
+    return this.plansService.deletePlan(id);
+  }
+
 }
