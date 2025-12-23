@@ -19,7 +19,6 @@ export class RolesGuard implements CanActivate {
         const { user } = context.switchToHttp().getRequest();
 
         if (!user) {
-            // No authenticated user — return 401 Unauthorized instead of 403 Forbidden
             throw new UnauthorizedException('User not authenticated');
         }
         const hasRole = requiredRoles.some((role) => user.role === role);

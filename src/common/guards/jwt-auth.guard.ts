@@ -24,12 +24,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     handleRequest(err, user, info) {
         if (err) {
-            // strategy-level errors get propagated (e.g., UnauthorizedException thrown in validate)
             throw err;
         }
 
         if (!user) {
-            // Use any message provided by passport (e.g., TokenExpiredError message)
             const message = (info && (info.message || (typeof info === 'string' ? info : undefined))) || 'Invalid or expired token';
             throw new UnauthorizedException(message);
         }
