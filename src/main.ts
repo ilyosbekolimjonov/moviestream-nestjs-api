@@ -42,7 +42,6 @@ async function bootstrap() {
         .addTag('Payments', 'Payment processing endpoints')
         .addTag('Categories', 'Movie category endpoints')
         .addTag('Movies', 'Movie management endpoints')
-        .addTag('Favorites', 'User favorites endpoints')
         .addTag('Reviews', 'Movie review endpoints')
         .addBearerAuth({
                 type: 'http',
